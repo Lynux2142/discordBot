@@ -1,9 +1,8 @@
 const { Client, Intents } = require('discord.js');
-//const { token } = require('./config.json');
-const allIntents = new Intents(32767);
+const SERVERID = '601320582579224586';
 const DEFAULTCHANNELID = '772435316858552350';
 
-const client = new Client({ intents: allIntents });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
 	client.users.fetch(newMember.id).then(user => {
@@ -18,5 +17,4 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 	});
 });
 
-//client.login(token);
-client.login(process.env.TOKEN);
+client.login(process.env.BOT_TOKEN);
