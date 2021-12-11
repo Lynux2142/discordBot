@@ -5,11 +5,6 @@ const DEFAULTCHANNELID = '772435316858552350';
 
 const client = new Client({ intents: allIntents });
 
-client.on('ready', () => {
-	console.log('bonjour');
-});
-
-/*
 client.on('voiceStateUpdate', (oldMember, newMember) => {
 	client.users.fetch(newMember.id).then(user => {
 		const oldChannel = client.channels.cache.get(oldMember.channelId);
@@ -22,7 +17,6 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		}
 	});
 });
-*/
 
 //client.login(token);
 client.login(process.env.TOKEN);
