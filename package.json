@@ -7,7 +7,7 @@
 	"scripts": {
 		"start": "nodemon index.js"
 	},
-	"engine": {
+	"engines": {
 		"node": "17.2.0"
 	}
 }
