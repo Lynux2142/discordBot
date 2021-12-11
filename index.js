@@ -1,5 +1,5 @@
 const { Client, Intents } = require('discord.js');
-//const { token, guildId } = require('./config.json');
+//const { token } = require('./config.json');
 const allIntents = new Intents(32767);
 const DEFAULTCHANNELID = '772435316858552350';
 
