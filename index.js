@@ -8,11 +8,13 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 	client.users.fetch(newMember.id).then(user => {
 		const oldChannel = client.channels.cache.get(oldMember.channelId);
 		const newChannel = client.channels.cache.get(newMember.channelId);
-		if (oldChannel) {
-			client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name}`);
-		}
-		if (newChannel) {
-			client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has joined ${newChannel.name}`);
+		if (oldChannel != newChannel) {
+			if (oldChannel) {
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name}`);
+			}
+			if (newChannel) {
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has joined ${newChannel.name}`);
+			}
 		}
 	});
 });
