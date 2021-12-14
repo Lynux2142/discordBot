@@ -3,6 +3,13 @@ const SERVERID = '601320582579224586';
 const DEFAULTCHANNELID = '772435316858552350';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
+let connexionTime;
+
+const timestampToTimeFormat = (timestamp) => {
+	const duration = new Date(timestamp ? timestamp : 0);
+	return (duration.toISOString().substr(11, 8));
+};
+
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
 	client.users.fetch(newMember.id).then(user => {
@@ -10,10 +17,12 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		const newChannel = client.channels.cache.get(newMember.channelId);
 		if (oldChannel != newChannel) {
 			if (oldChannel) {
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name}`);
+				const upTime = timestampToTimeFormat(Math.round(Date.now() - connexionTime));
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} (${upTime})`);
 			}
 			if (newChannel) {
 				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has joined ${newChannel.name}`);
+				connexionTime = Date.now();
 			}
 		}
 	});
