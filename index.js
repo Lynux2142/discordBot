@@ -6,7 +6,9 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
 const timestampToTimeFormat = (timestamp) => {
 	const duration = new Date(timestamp ? timestamp : 0);
-	return (duration.toISOString().substr(11, 8));
+	const splitDuration = duration.toISOString().substr(11, 8).split(':');
+	let strDuration = `${splitDuration[0]} h ${splitDuration[1]} mn ${splitDuration[2]} sec`;
+	return (strDuration);
 };
 
 
