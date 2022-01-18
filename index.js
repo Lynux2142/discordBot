@@ -16,6 +16,12 @@ const timestampToTimeFormat = (timestamp, username) => {
 	return (strDuration);
 };
 
+client.on('messageCreate', message => {
+	if (message.content == '!time') {
+		message.reply(timestampToTimeFormat(Math.round(Date.now() - message.author.connexionTimestamp), message.author.username));
+	}
+});
+
 client.on('voiceStateUpdate', (oldMember, newMember) => {
 	client.users.fetch(newMember.id).then(user => {
 		const oldChannel = client.channels.cache.get(oldMember.channelId);
