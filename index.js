@@ -5,11 +5,12 @@ const DEFAULTCHANNELID = '772435316858552350';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 
 const timestampToTimeFormat = (timestamp, username) => {
-	const duration = new Date(timestamp ? timestamp : 0);
+	const duration = new Date(timestamp ? Date.now() - timestamp : 0);
 	console.log(username);
 	console.log('---------------------');
-	console.log(timestamp);
-	console.log(duration.toISOString().substr(11, 8));
+	console.log(`save: ${timestamp}`);
+	console.log(`now: ${Date.now()}`);
+	console.log(`diff: ${duration.toISOString().substr(11, 8)}`);
 	console.log('---------------------');
 	const splitDuration = duration.toISOString().substr(11, 8).split(':');
 	const strDuration = `${splitDuration[0]}h ${splitDuration[1]}mn ${splitDuration[2]}sec`;
@@ -18,7 +19,7 @@ const timestampToTimeFormat = (timestamp, username) => {
 
 client.on('messageCreate', message => {
 	if (message.content == '!time') {
-		message.reply(timestampToTimeFormat(Math.round(Date.now() - message.author.connexionTimestamp), message.author.username));
+		message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
 	}
 });
 
@@ -28,7 +29,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		const newChannel = client.channels.cache.get(newMember.channelId);
 		if (oldChannel != newChannel) {
 			if (oldChannel) {
-				const upTime = timestampToTimeFormat(Math.round(Date.now() - user.connexionTimestamp), user.username);
+				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
 				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} (${upTime})`);
 			}
 			if (newChannel) {
