@@ -31,6 +31,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 			if (oldChannel) {
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
 				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} (${upTime})`);
+				delete user.connexionTimestamp;
 			}
 			if (newChannel) {
 				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has joined ${newChannel.name}`);
