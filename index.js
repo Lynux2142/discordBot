@@ -32,13 +32,17 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		const oldChannel = client.channels.cache.get(oldMember.channelId);
 		const newChannel = client.channels.cache.get(newMember.channelId);
 		if (oldChannel != newChannel) {
-			if (oldChannel) {
+			if (oldChannel && newChannel) {
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} (${upTime})`);
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} to join ${newChannel.name}`);
+			}
+			if (oldChannel && !newChannel) {
+				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has disconnected from the server (${upTime})`);
 				delete user.connexionTimestamp;
 			}
-			if (newChannel) {
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has joined ${newChannel.name}`);
+			if (!oldChannel && newChannel) {
+				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has connected to ${newChannel.name}`);
 				user.connexionTimestamp = Date.now();
 			}
 		}
