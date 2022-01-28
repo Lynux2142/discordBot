@@ -18,11 +18,22 @@ const timestampToTimeFormat = (timestamp, username) => {
 };
 
 client.on('messageCreate', message => {
-	if (message.content == '!time') {
-		if (message.author.connexionTimestamp) {
-			message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
+	const regex = new RegExp('^!time');
+	if (regex.test(message.content)) {
+		if (message.mentions.users.size === 0) {
+			if (message.author.connexionTimestamp) {
+				message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
+			} else {
+				message.reply('You are currently not connected to a voice room');
+			}
 		} else {
-			message.reply('You are currently not connected to a voice room.');
+			message.mentions.users.map(user => {
+				if (user.connexionTimestamp) {
+					message.reply(`${user.username} is connected since ${timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username)}`);
+				} else {
+					message.reply(`${user.username} are currently not connected to a voice room`);
+				}
+			});
 		}
 	}
 });
