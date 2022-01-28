@@ -19,7 +19,11 @@ const timestampToTimeFormat = (timestamp, username) => {
 
 client.on('messageCreate', message => {
 	if (message.content == '!time') {
-		message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
+		if (message.author.connexionTimestamp) {
+			message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
+		} else {
+			message.reply('You are currently not connected to a voice room.');
+		}
 	}
 });
 
