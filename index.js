@@ -1,8 +1,12 @@
-const { Client, Intents } = require('discord.js');
-const SERVERID = '601320582579224586';
-const DEFAULTCHANNELID = '772435316858552350';
+const { Client, GatewayIntentBits } = require('discord.js');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildVoiceStates
+	]
+});
 
 const timestampToTimeFormat = (timestamp, username) => {
 	const duration = new Date(timestamp ? Date.now() - timestamp : 0);
@@ -45,15 +49,15 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		if (oldChannel != newChannel) {
 			if (oldChannel && newChannel) {
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has left ${oldChannel.name} to join ${newChannel.name}`);
+				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has left ${oldChannel.name} to join ${newChannel.name}`);
 			}
 			if (oldChannel && !newChannel) {
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has disconnected from the server (${upTime})`);
+				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has disconnected from the server (${upTime})`);
 				delete user.connexionTimestamp;
 			}
 			if (!oldChannel && newChannel) {
-				client.channels.cache.get(DEFAULTCHANNELID).send(`${user.username} has connected to ${newChannel.name}`);
+				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has connected to ${newChannel.name}`);
 				user.connexionTimestamp = Date.now();
 			}
 		}
