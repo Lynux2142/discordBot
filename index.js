@@ -22,7 +22,7 @@ client.on('messageCreate', message => {
 	if (regex.test(message.content)) {
 		const currentDate = new Date().toLocaleString();
 		if (message.mentions.users.size === 0) {
-			console.log(`[${currentDate}] INFO: ${message.author.username} ask for his timestamp`);
+			console.log(`[${currentDate}] INFO: ${message.author.username} asked for his timestamp`);
 			if (message.author.connexionTimestamp) {
 				message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
 			} else {
@@ -30,7 +30,7 @@ client.on('messageCreate', message => {
 			}
 		} else {
 			message.mentions.users.map(user => {
-				console.log(`[${currentDate}] INFO: ${message.author.username} ask for ${user.username} timestamp`);
+				console.log(`[${currentDate}] INFO: ${message.author.username} asked for ${user.username} timestamp`);
 				if (user.connexionTimestamp) {
 					message.reply(`${user.username} is connected since ${timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username)}`);
 				} else {
@@ -48,7 +48,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		if (oldChannel != newChannel) {
 			const currentDate = new Date().toLocaleString();
 			if (oldChannel && newChannel) {
-				console.log(`[${currentDate}] INFO: ${user.username} has change channel`);
+				console.log(`[${currentDate}] INFO: ${user.username} has changed channel`);
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
 				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has left ${oldChannel.name} to join ${newChannel.name}`);
 			}
