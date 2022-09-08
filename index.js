@@ -4,18 +4,14 @@ const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildVoiceStates
 	]
 });
 
 const timestampToTimeFormat = (timestamp, username) => {
 	const duration = new Date(timestamp ? Date.now() - timestamp : 0);
-	console.log(username);
-	console.log('---------------------');
-	console.log(`save: ${timestamp}`);
-	console.log(`now: ${Date.now()}`);
-	console.log(`diff: ${duration.toISOString().substr(11, 8)}`);
-	console.log('---------------------');
+	const currentDate = new Date().toLocaleString();
 	const splitDuration = duration.toISOString().substr(11, 8).split(':');
 	const strDuration = `${splitDuration[0]}h ${splitDuration[1]}mn ${splitDuration[2]}sec`;
 	return (strDuration);
@@ -24,7 +20,9 @@ const timestampToTimeFormat = (timestamp, username) => {
 client.on('messageCreate', message => {
 	const regex = new RegExp('^!time');
 	if (regex.test(message.content)) {
+		const currentDate = new Date().toLocaleString();
 		if (message.mentions.users.size === 0) {
+			console.log(`[${currentDate}] INFO: ${message.author.username} ask for his timestamp`);
 			if (message.author.connexionTimestamp) {
 				message.reply(timestampToTimeFormat(Math.round(message.author.connexionTimestamp), message.author.username));
 			} else {
@@ -32,6 +30,7 @@ client.on('messageCreate', message => {
 			}
 		} else {
 			message.mentions.users.map(user => {
+				console.log(`[${currentDate}] INFO: ${message.author.username} ask for ${user.username} timestamp`);
 				if (user.connexionTimestamp) {
 					message.reply(`${user.username} is connected since ${timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username)}`);
 				} else {
@@ -47,16 +46,20 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 		const oldChannel = client.channels.cache.get(oldMember.channelId);
 		const newChannel = client.channels.cache.get(newMember.channelId);
 		if (oldChannel != newChannel) {
+			const currentDate = new Date().toLocaleString();
 			if (oldChannel && newChannel) {
+				console.log(`[${currentDate}] INFO: ${user.username} has change channel`);
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
 				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has left ${oldChannel.name} to join ${newChannel.name}`);
 			}
 			if (oldChannel && !newChannel) {
+				console.log(`[${currentDate}] INFO: ${user.username} has disconnected from the server`);
 				const upTime = timestampToTimeFormat(Math.round(user.connexionTimestamp), user.username);
 				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has disconnected from the server (${upTime})`);
 				delete user.connexionTimestamp;
 			}
 			if (!oldChannel && newChannel) {
+				console.log(`[${currentDate}] INFO: ${user.username} has connected to the server`);
 				client.channels.cache.get(process.env.CHANNEL_LOG_ID).send(`${user.username} has connected to ${newChannel.name}`);
 				user.connexionTimestamp = Date.now();
 			}
