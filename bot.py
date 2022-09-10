@@ -13,7 +13,6 @@ userInfo = {}
 async def on_ready():
 	print(f'We have logged in as {client.user}')
 	now = datetime.now().replace(microsecond = 0)
-	print(len(client.guilds))
 	for guild in client.guilds:
 		for channel in guild.voice_channels:
 			for member in channel.members:
@@ -40,6 +39,8 @@ async def on_message(message):
 	if (message.channel.id == int(os.getenv('CHANNEL_LOG_ID'))):
 		if (message.content.startswith('!time')):
 			now = datetime.now().replace(microsecond = 0)
-			await message.reply(now - userInfo[message.author.id], mention_author = False)
+			reply_message = now - userInfo[message.author.id]
+			await message.reply(reply_message, mention_author = False)
+			print(f'[{now.strftime("%d/%m/%Y, %H:%M:%S")}] INFO: {message.author.name} asked for his time ({reply_message})')
 
 client.run(os.getenv('BOT_TOKEN'))
