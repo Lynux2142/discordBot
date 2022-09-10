@@ -39,8 +39,18 @@ async def on_message(message):
 	if (message.channel.id == int(os.getenv('CHANNEL_LOG_ID'))):
 		if (message.content.startswith('!time')):
 			now = datetime.now().replace(microsecond = 0)
-			reply_message = now - userInfo[message.author.id]
-			await message.reply(reply_message, mention_author = False)
-			print(f'[{now.strftime("%d/%m/%Y, %H:%M:%S")}] INFO: {message.author.name} asked for his time ({reply_message})')
+			if (message.mentions):
+				reply_message = ""
+				for member in message.mentions:
+					if member.id in userInfo:
+						reply_message += f'{member.name}#{member.discriminator} is connected since {now - userInfo[member.id]}\n'
+						continue
+					reply_message += f'{member.name}#{member.discriminator} is not connected to the server\n'
+				await message.reply(reply_message, mention_author = False)
+				print(f'[{now.strftime("%d/%m/%Y, %H:%M:%S")}] INFO: {message.author.name} asked for some members time')
+			else:
+				reply_message = now - userInfo[message.author.id]
+				await message.reply(reply_message, mention_author = False)
+				print(f'[{now.strftime("%d/%m/%Y, %H:%M:%S")}] INFO: {message.author.name} asked for his time')
 
 client.run(os.getenv('BOT_TOKEN'))
