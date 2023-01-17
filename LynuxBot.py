@@ -1,5 +1,5 @@
-import os
 import logging
+import json
 from datetime import datetime
 import discord
 
@@ -8,6 +8,15 @@ logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s: %(message)s"))
 logger.addHandler(handler)
+
+try:
+    with open("config.json", "r") as f:
+        config = json.load(f)
+        assert "BOT_TOKEN" in config, "BOT_TOKEN must be present in config.json"
+        assert "CHANNEL_ID" in config, "CHANNEL_ID must be present in config.json"
+except IOError:
+    print(f"IOError: config.json is missing")
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -27,7 +36,7 @@ async def on_ready():
 @client.event
 async def on_voice_state_update(member, before, after):
     now = datetime.now().replace(microsecond=0)
-    channelLog = client.get_channel(int(os.getenv("CHANNEL_LOG_ID")))
+    channelLog = client.get_channel(int(config["CHANNEL_ID"]))
     message = ""
 
     if before.channel != after.channel:
@@ -63,4 +72,4 @@ async def on_message(message):
         logger.info(reply_message)
         await message.reply(reply_message, mention_author=False)
 
-client.run(os.getenv("BOT_TOKEN"))
+client.run(config["BOT_TOKEN"])
