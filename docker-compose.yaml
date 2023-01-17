@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHANNEL_LOG_ID=${CHANNEL_ID}
+    image: lynux_bot
+    container_name: "LynuxBot"
