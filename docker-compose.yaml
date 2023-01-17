@@ -7,3 +7,4 @@ services:
       dockerfile: Dockerfile
     image: lynux_bot
     container_name: "LynuxBot"
+    restart: always
