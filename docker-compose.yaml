@@ -7,4 +7,7 @@ services:
       dockerfile: Dockerfile
     image: lynux_bot
     container_name: "LynuxBot"
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
     restart: always
